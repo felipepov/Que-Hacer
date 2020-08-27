@@ -1,4 +1,4 @@
-import  { elements, renderLoader, clearLoader  } from "./base.js";
+import  { elements, renderLoader, clearLoader  } from "./views/base.js";
 import Activity from "./modules/Activity.js";
 import * as activityView from "./views/activityView.js"
 

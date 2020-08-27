@@ -5,7 +5,7 @@ export default class Activy {
     }
     async getResults(){
         try{
-            const res = await fetch(`http://www.boredapi.com/api/activity?key=${this.key}`).then(response => response.json());
+            const res = await fetch(`https://www.boredapi.com/api/activity?key=${this.key}`).then(response => response.json());
             this.title = res.activity
             this.type = res.type
             this.people = res.participants

@@ -1,4 +1,4 @@
-import  { elements } from "../base.js";
+import  { elements } from "./base.js";
 
 export const  renderActivity  = (activity, isLiked = 'false') => {
     const markup = `     
