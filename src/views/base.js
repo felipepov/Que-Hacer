@@ -5,7 +5,8 @@ export const elements = {
     likes: document.querySelector('#likes'),
     activityButton: document.querySelector('#generate'),
     activitySection: document.querySelector('#section1'),
-    main : document.querySelector('#main')
+    main : document.querySelector('#main'),
+    likeToggle : document.querySelector('#like')
 };
 
 export const renderLoader = parent => {
