@@ -1,6 +1,6 @@
 import { elements, renderLoader, clearLoader } from './views/base.js';
 import Activity from './modules/Activity.js';
-// import Like from './modules/Likes.js';
+import Like from './modules/Likes.js';
 import * as activityView from './views/activityView.js';
 import * as likesView from './views/likesView.js';
 
@@ -11,7 +11,6 @@ import * as likesView from './views/likesView.js';
 // Store in localstorage
 
 const state = {};
-state.likes = [];
 
 // *** ACTIVITY CONTROLLER ***
 const controlActivity = async (id) => {
@@ -33,7 +32,7 @@ const controlActivity = async (id) => {
 		await state.act.getResults();
 
 		if (state.act.title != undefined) {
-			const liked = state.likes.includes(state.act.key)
+			const liked = state.like ? state.like.isLiked(state.act.key) : false;
 			clearLoader(elements.main);
 			activityView.renderActivity(state.act, liked);
 		} else {
@@ -46,26 +45,24 @@ const controlActivity = async (id) => {
 };
 // *** LIKES CONTROLLER ***
 const controlLike = () =>{
-	// State.likes
-	// state.likes = new Like();
+	if (!state.like) {
+	state.like = new Like();
+	}
 	// User HAS liked current recipe
-	if (state.likes.includes(state.act.key)) {
+	if (state.like.isLiked(state.act.key)) {
 		// Remove like from the state
-		state.act.liked = false;
-		const i = state.likes.findIndex(cur => cur === state.act.key);
-		state.likes.splice(i, 1);
+		state.act.liked = state.like.deleteLike(state.act.key);
 		// Remove like from UI list
 		likesView.deleteListItem(state.act.key)
 	}
 	// User HAS NOT liked current recipe
 	else {
 		// Add like to the state
-		state.act.liked = true;
-		state.likes.push(state.act.key);
+		state.act.liked = state.like.addLike(state.act.key, state.act.title, state.act.type);
 		// Add like to UI list
 		likesView.renderListItem(state.act);
 	}
-	console.log(state.likes)
+	console.log(state.like.likes)
 	// Toggle the like button
 	activityView.clearActivity();
 	activityView.renderActivity(state.act, state.act.liked);
@@ -109,5 +106,10 @@ window.addEventListener('hashchange', function(){
 });
 
 // Generate new activity
-elements.activityButton.addEventListener('click', controlActivity);
+elements.activityButton.addEventListener('click',function(){
+	controlActivity();
+	if (elements.activitySection.classList.contains('hidden')) {
+		elements.activitySection.classList.remove('hidden');
+	}
+});
 
