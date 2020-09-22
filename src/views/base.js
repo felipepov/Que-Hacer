@@ -1,9 +1,7 @@
 export const elements = {
-    burger: document.querySelector('#burger'),
+    nav: document.querySelector('#nav'),
     menu: document.querySelector('#menu'),
-    likesBtn: document.querySelector('#likesBtn'),
     likes: document.querySelector('#likes'),
-    activityButton: document.querySelector('#generate'),
     activitySection: document.querySelector('#section1'),
     main : document.querySelector('#main'),
     likeToggle : document.querySelector('#like')

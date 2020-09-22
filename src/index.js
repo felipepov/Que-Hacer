@@ -69,31 +69,36 @@ const controlLike = () =>{
 }
 
 // *** EVENT HANDLING ***
-// Handle Menu
-elements.burger.addEventListener('click', () => {
-	if (elements.menu.classList.contains('hidden')) {
-		elements.menu.classList.remove('hidden');
-	} else {
-		elements.menu.classList.add('hidden');
+elements.nav.addEventListener('click', e => {
+	if (e.target.matches('#likesBtn, #likesBtn *')) {
+		// Handle Likes Button
+		if (elements.likes.classList.contains('hidden')) {
+			elements.likes.classList.remove('hidden');
+		} else {
+			elements.likes.classList.add('hidden');
+		}
+		// Handle Menu
+	} else if (e.target.matches('#generate, #generate *')) {
+		if (elements.menu.classList.contains('hidden')) {
+			elements.menu.classList.remove('hidden');
+		} else {
+			elements.menu.classList.add('hidden');
+		}
 	}
 });
 
-// Handle Likes Button
-elements.likesBtn.addEventListener('click', () => {
-	if (elements.likes.classList.contains('hidden')) {
-		elements.likes.classList.remove('hidden');
-	} else {
-		elements.likes.classList.add('hidden');
-	}
-});
-
-// Toggle like button
 elements.activitySection.addEventListener('click', e => { 
+	// Toggle like button
 	if (e.target.matches('#like, #like *')) {
 		controlLike();
+		// Generate new activity
+	} else if (e.target.matches('#generate, #generate *')) {
+		controlActivity();
+		if (elements.activitySection.classList.contains('hidden')) {
+			elements.activitySection.classList.remove('hidden');
+		}
 	}
 });
-
 	
 // Check for inputted activity
 window.addEventListener('hashchange', function(){
@@ -102,14 +107,6 @@ window.addEventListener('hashchange', function(){
 		if(id >= 1000000 && id <= 9999999) {
 			controlActivity(id);
 		}
-	}
-});
-
-// Generate new activity
-elements.activityButton.addEventListener('click',function(){
-	controlActivity();
-	if (elements.activitySection.classList.contains('hidden')) {
-		elements.activitySection.classList.remove('hidden');
 	}
 });
 

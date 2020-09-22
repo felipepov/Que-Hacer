@@ -1,2 +1,7 @@
 node_modules
 tailwindDefault.config.js
+.firebaserc
+database.rules.json
+firebase.json
+storage.rules
+.firebase
