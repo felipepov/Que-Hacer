@@ -6,15 +6,18 @@
   "type": "module",
   "scripts": {
     "build-css": "tailwindcss build src/styles.css -o dist/styles.css",
-    "start" : "webpack"
+    "start": "webpack",
+    "deploy": "firebase deploy",
+    "emulate": "firebase emulators:start"
   },
   "author": "pip-po",
   "license": "ISC",
   "dependencies": {
-    "tailwindcss": "^1.6.2"
   },
   "devDependencies": {
+    "firebase-tools": "^8.11.0",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "tailwindcss": "^1.6.2"
   }
 }
