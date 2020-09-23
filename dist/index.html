@@ -1,125 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Que Hacer?</title>
-		<link rel="stylesheet" href="styles.css" />
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Que Hacer?</title>
+	<link rel="stylesheet" href="styles.css" />
 	</head>
-
+	
 	<body class="flex flex-col justify-between min-h-screen bg-secondary-light">
 		<header class="flex w-full b-primary-200">
 			<div
-				class="flex flex-row bg-secondary-acc w-3/4 md:w-2/4 justify-center text-center"
+			class="flex flex-row bg-secondary-acc w-3/4 md:w-2/4 justify-center text-center"
 			>
-				<img class="w-1/2 sm:ml-4 sm:w-1/6 self-center" src="img/logo.svg" />
-				<h2
-					class=" hidden sm:block self-center text-3xl text-white font-black px-4"
-				>
-					<a href="index.html" rel="noopener noreferrer">Que Hacer?</a>
-				</h2>
-			</div>
-			<nav
-				id="nav"
-				class="flex flex-col sm:flex-row justify-end sm:justify-evenly h-full bg-primary-300 text-white font-bold w-full"
+			<img class="w-1/2 sm:ml-4 sm:w-1/6 self-center" src="img/logo.svg" />
+			<h2
+			class=" hidden sm:block self-center text-3xl text-white font-black px-4"
 			>
-				<div id="burger" class="cursor-pointer block sm:hidden">
-					<svg viewBox="0 0 20 20" fill="currentColor" class="w-1/4">
-						<path
-							fill-rule="evenodd"
-							d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-							clip-rule="evenodd"
-						></path>
-					</svg>
-				</div>
-				<ul
-					id="menu"
-					class="flex p-6 bg-primary-200 flex-col md:flex-row justify-between items-center text-xl md:text-2xl"
-				>
-					<!-- Activites is complete list of everything there is and it can be filtered -->
-					<li><a href="" class="mx-5">Actividades</a></li>
-					<!-- About is a short description of the idea and links to Pip-po -->
-					<li><a href="" class="mx-5">Sobre nosostros</a></li>
-					<!-- Contribuir will allow for adding your own activities to local storage  -->
-					<li><a href="" class="mx-5">Contribuir</a></li>
-				</ul>
-				<div
-					class="relative flex flex-col items-center justify-center bg-primary-300 px-6 my-auto w-full"
-				>
-					<!-- A liked icon to bring down all the liked activities -->
-					<button class="cursor-pointer outline-none" id="likesBtn">
-						<img src="img/like.svg" alt="" height="48" width="48" />
-					</button>
-					<ul
-						id="likes"
-						class="absolute top-0 right-0 mt-20 flex p-0 bg-primary-100 flex-col justify-around text-center text-xl md:text-2xl w-full hidden"
-					>
-					<!-- <div id="1000000">
-						<a href="#1000000">
-							<li class="border-white border-2 flex flex-row px-6 py-4 justify-evenly">
-								<img src="img/recreational.svg" heigh="48" width="48">
-								<h4 class="text-base">Make a New Friend</h4>
-							</li>
-						</a>
-					</div> -->
-					</ul>
-				</div>
-			</nav>
-		</header>
-		<main class="grid grid-cols-8" id="main">
-			<!-- Main title and subheading with call to action to generate activity -->
-			<div
-				class="flex flex-col col-span-6 col-start-2 text-center justify-evenly items-center"
-			>
-				<h1 class="p-4 text-5xl font-extrabold uppercase tracking-wider">
-					¿Estas aburrido?
-				</h1>
-				<h2 class="p-2 text-2xl font-Monstserrat font-medium tracking-tighter">
-					Viniste al lugar correcto, encuentra tu proxima diversion ahora.
-				</h2>
-				<button
-					id="generate"
-					class="shadow-lg hover:shadow-inner self-center w-1/2 m-2 flex justify-evenly p-3 bg-primary-100 text-white border-primary-300 border-solid border-2 rounded-lg text-lg font-Lato font-bold hover:font-extrabold"
-				>
-					<span class="self-center">Apretando aqui!</span>
-				</button>
-				<!-- Activation to create buttons to filter out content -->
-				<div class="m-2 font-Lato font-light">
-					<h4>
-						Necesitas algo mas especifico?
-						<a href="" class="mx-1 font-normal hover:font-semibold cursor-pointer"
-							>Filtra por categorias aqui</a
-						>
-					</h4>
-				</div>
-			</div>
-			<div
-				id="section1"
-				class="font-Monstserrat m-8 text-black bg-white col-span-6 col-start-2 border-primary-200 border-solid border-4 rounded-lg hidden"
-				>
-				<!-- New Generated activy with: Main content, Stadistics and extra Content-->
-			</div>
-		</main>
-		<!-- <svg id="loader" class="animate-spin my-20 mx-auto h-16 w-16 text-center text-primary-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-50" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg> -->
-		<footer class="">
-			<div
-				class="bg-primary-200 text-sm text-center font-Lato font-light text-secondary-light w-full p-4"
-			>
-				<h5>Creado por Pip-po</h5>
-			</div>
-		</footer>
-		<!-- The core Firebase JS SDK is always required and must be listed first -->
-		<script src="/__/firebase/7.21.0/firebase-app.js"></script>
+			<a href="index.html" rel="noopener noreferrer">Que Hacer?</a>
+		</h2>
+	</div>
+	<nav
+	id="nav"
+	class="flex flex-col md:flex-row justify-end sm:justify-evenly h-full bg-primary-300 text-white font-bold w-full"
+	>
+	<div id="burger" class="cursor-pointer block sm:hidden ">
+		<svg viewBox="0 0 20 20" fill="currentColor" class="w-1/4 mx-auto">
+			<path
+			fill-rule="evenodd"
+			d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+			clip-rule="evenodd"
+			></path>
+		</svg>
+	</div>
+	<ul
+	id="menu"
+	class="flex p-6 bg-primary-200 flex-col md:flex-row items-center justify-evenly text-xl md:text-2xl"
+	>
+	<!-- Activites is complete list of everything there is and it can be filtered -->
+	<li class=" border-primary-300 md:border-r-2 md:mr-6"><a href="" class="mx-5">Actividades</a></li>
+	<!-- About is a short description of the idea and links to Pip-po -->
+	<li><a href="" class="ml-5">Sobre nosostros</a></li>
+	<!-- Contribuir will allow for adding your own activities to local storage  -->
+	<li class=" border-primary-300 md:border-l-2 md:ml-2"><a href="#contribuir" class="mx-5">Contribuir</a></li>
+</ul>
+<div
+class="relative flex flex-col items-center justify-center bg-primary-300 px-6 py-2 my-auto w-full"
+>
+<!-- A liked icon to bring down all the liked activities -->
+<button class="cursor-pointer outline-none" id="likesBtn">
+	<img src="img/like.svg" alt="" height="48" width="48" />
+</button>
+<ul
+id="likes"
+class="absolute top-0 right-0 mt-20 flex p-0 bg-primary-100 flex-col justify-around text-center text-xl md:text-2xl w-full hidden"
+>
+<!-- <div id="1000000">
+	<a href="#1000000">
+		<li class="border-white border-2 flex flex-row px-6 py-4 justify-evenly">
+			<img src="img/recreational.svg" heigh="48" width="48">
+			<h4 class="text-base">Make a New Friend</h4>
+		</li>
+	</a>
+</div> -->
+</ul>
+</div>
+</nav>
+</header>
+<main class="grid grid-cols-8" id="main">
+	<!-- Main title and subheading with call to action to generate activity -->
+	<div
+	class="flex flex-col col-span-6 col-start-2 text-center justify-evenly items-center"
+	>
+	<h1 class="p-4 text-5xl font-extrabold uppercase tracking-wider">
+		¿Estas aburrido?
+	</h1>
+	<h2 class="p-2 text-2xl font-Monstserrat font-medium tracking-tighter">
+		Viniste al lugar correcto, encuentra tu proxima diversion ahora.
+	</h2>
+	<button
+	id="generate"
+	class="shadow-lg hover:shadow-inner self-center w-1/2 m-2 flex justify-evenly p-3 bg-primary-100 text-white border-primary-300 border-solid border-2 rounded-lg text-lg font-Lato font-bold hover:font-extrabold"
+	>
+	<span class="self-center">Apretando aqui!</span>
+</button>
+<!-- Activation to create buttons to filter out content -->
+<div class="m-2 font-Lato font-light">
+	<h4>
+		Necesitas algo mas especifico?
+		<a href="" class="mx-1 font-normal hover:font-semibold cursor-pointer"
+		>Filtra por categorias aqui</a
+		>
+	</h4>
+</div>
+</div>
+<div
+id="section1"
+class="font-Monstserrat m-8 text-black bg-white col-span-6 col-start-2 border-primary-200 border-solid border-4 rounded-lg hidden"
+>
+<!-- New Generated activy with: Main content, Stadistics and extra Content-->
+</div>
+<!-- Loader -->
+</main>
+<div id="contribuir"
+class="bg-primary-200 text-white grid grid-cols-8">
+<div
+class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-center"
+>
+<h1 class="p-4 text-3xl font-extrabold uppercase tracking-wider">
+	Contribuye al proyecto:
+</h1>
+<section id="whenSignedOut" class="p-2 text-2xl font-Monstserrat font-medium tracking-tighter">
+	<button class="cursor-pointer outline-none" id="signInBtn">
+		Ingresa a tu cuenta de google
+	</button>
+</section>
+<!-- Activation to create buttons to filter out content -->
+</div>
+<div class="col-span-6 col-start-2">
+	<section id="whenSignedIn" hidden="true">
+		<div id="userDetails"></div>
+		<button id="signOutBtn" class="bg-white text-black cursor-pointer p-4 m-4 rounded-md">Desconectar</button>
+	</section>
+	<section>
+		<h3 class="text-xl text-bold font-Monstserrat mx-2 mb-2 mt-4">Mis Actividades</h3>
+		<ul id="actsList">
+	
+		</ul>
+		<input type="text" name="Actividad" id="newAct" class="text-black w-1/4 block m-2" placeholder="Nombre de actividad nueva">
+		<button id="createAct" class="p-4 mx-2 mb-4 bg-primary-100 border-2 border-white text-bold rounded-lg">Crear Actividad</button>
+	
+	  </section>
+</div>
+</div>
+<footer class="bg-secondary-acc text-sm text-center font-Lato font-light text-secondary-light w-full p-4">
+	<h5>Creado por Pip-po</h5>
+</footer>
 
-		<!-- TODO: Add SDKs for Firebase products that you want to use
-			https://firebase.google.com/docs/web/setup#available-libraries -->
 
-		<!-- Initialize Firebase -->
-		<script src="/__/firebase/init.js"></script>
+
+
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
+	<script>
+		// Your web app's Firebase configuration
+		var firebaseConfig = {
+			apiKey: "AIzaSyA6V3ldz0yxoOZb394Ue2mETXI3LNzNVoM",
+			authDomain: "que-hacer-01.firebaseapp.com",
+			databaseURL: "https://que-hacer-01.firebaseio.com",
+			projectId: "que-hacer-01",
+			storageBucket: "que-hacer-01.appspot.com",
+			messagingSenderId: "43796522735",
+			appId: "1:43796522735:web:560a1cfc292a784f089d1a"
+		};
+		// Initialize Firebase
+		firebase.initializeApp(firebaseConfig);
+		// Initialize Performance Monitoring and get a reference to the service
+	 	var perf = firebase.performance();
+	</script>
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+		https://firebase.google.com/docs/web/setup#available-libraries -->
+		<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-performance.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
 		<!-- <script src="../src/index.js" type="module"></script> -->
+		<script src="app.js"></script>
 		<script src="main.js"></script>
-	</body>
+</body>
 </html>
