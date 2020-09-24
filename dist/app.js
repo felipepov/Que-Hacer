@@ -1,5 +1,3 @@
-console.log(firebase)
-
 // *** AUTHENTICATION ***
 const auth = firebase.default.auth();
 
@@ -22,7 +20,7 @@ auth.onAuthStateChanged(user => {
         // signed in
         whenSignedIn.hidden = false;
         whenSignedOut.hidden = true;
-        userDetails.innerHTML = `<h3>Hola ${user.displayName}!</h3> <p>ID de Usuario: ${user.uid}</p>`;
+        userDetails.innerHTML = `<h3>Hola <span class=" font-bold"> ${user.displayName}</span>!</h3> <p>ID de Usuario: <span class=" font-bold">${user.uid}</span></p>`;
     } else {
         // not signed in
         whenSignedIn.hidden = true;
@@ -45,15 +43,44 @@ auth.onAuthStateChanged(user => {
 
     if (user) {
         actsRef = db.collection('activities');
+        const actArr = [];
         createAct.onclick = () => {
-            console.log('It worked')
-            actsRef.add({
-                uid: user.uid,
-                name: newAct.value,
-                createdAt: Date.now()
-                // serverTimestamp()
-            });
+            if (newAct.elements.name.value != false) {
+                const actAdd = {
+                    uid: user.uid,
+                    id: 1000001 + actArr.length,
+                    name: newAct.elements.name.value,
+                    type: newAct.elements.type.value,
+                    participants: newAct.elements.participants.value,
+                    price: newAct.elements.price.value / 10,
+                    accesibility: newAct.elements.accesibility.value / 10,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                actArr.push(actAdd);
+                actsRef.add(actAdd);
+                for (let i = 0; i < newAct.elements.length; i++) {
+                    newAct.elements[i].value = '';
+                }
+            }
         }
+            // Query
+            unsubscribe = actsRef
+            .where('uid', '==', user.uid)
+            .orderBy('createdAt') // Requires a query
+            .onSnapshot(querySnapshot => {
+                
+                // Map results to an array of li elements
+                const items = querySnapshot.docs.map(doc => {
+                    return `<li class="list-decimal list-inside m-4">${doc.data().name}</li>`
+                });
+
+                actsList.innerHTML = items.join('');
+
+            });
+
+    } else {
+        // Unsubscribe when the user signs out
+        unsubscribe && unsubscribe();
     }
 
 });

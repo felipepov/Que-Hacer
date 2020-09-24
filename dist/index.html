@@ -117,17 +117,40 @@ class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-cente
 <!-- Activation to create buttons to filter out content -->
 </div>
 <div class="col-span-6 col-start-2">
-	<section id="whenSignedIn" hidden="true">
-		<div id="userDetails"></div>
+	<section id="whenSignedIn" hidden="true" class="flex justify-evenly p-4 bg-primary-100 border-secondary-light border-2 rounded-md">
+		<div id="userDetails" class="w-1/4 font-Monstserrat text-lg m-2"></div>
 		<button id="signOutBtn" class="bg-white text-black cursor-pointer p-4 m-4 rounded-md">Desconectar</button>
 	</section>
 	<section>
-		<h3 class="text-xl text-bold font-Monstserrat mx-2 mb-2 mt-4">Mis Actividades</h3>
+		<h3 class="font-Monstserrat contributeTitles">Mis Actividades</h3>
 		<ul id="actsList">
 	
 		</ul>
-		<input type="text" name="Actividad" id="newAct" class="text-black w-1/4 block m-2" placeholder="Nombre de actividad nueva">
-		<button id="createAct" class="p-4 mx-2 mb-4 bg-primary-100 border-2 border-white text-bold rounded-lg">Crear Actividad</button>
+		<h3 class="font-Monstserrat contributeTitles">Agregar actividad</h3>
+		<form id="newAct" class="flex flex-col">
+			<label for="name">Nombre:</label>
+			 <input type="text" name="name" class="formElement">
+			 <label for="type">Tipo: </label>
+			 <select name="type" class="formElement">
+					<option value=""></option>
+					<option value="education">Educacion</option>
+					<option value="recreational">Recreacional</option>
+					<option value="social">Social</option>
+					<option value="diy">Artesania</option>
+					<option value="charity">Caridad</option>
+					<option value="cooking">Cocina</option>
+					<option value="relaxation">Relajacion</option>
+					<option value="music">Musica</option>
+					<option value="busywork">Trabajo</option>
+			</select>
+			<label for="participants">Participantes (Minimo necesario):</label>
+			<input type="number" name="participants" min="0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" class="formElement">
+			 <label for="price">Precio (0 a 10):</label>
+			 <input type="number" name="price" min="0" max="10" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 && this.value < 10 ? Math.abs(this.value) : null" class="formElement">
+			<label for="accesibility">Facilidad (0 a 10):</label>
+			<input type="number" name="accesibility"  min="0" max="10" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 && this.value < 10 ? Math.abs(this.value) : null" class="formElement">
+		  </form>
+		<button id="createAct" class="p-4 mx-2 my-4 bg-primary-100 border-2 border-white text-bold rounded-lg">Crear Actividad</button>
 	
 	  </section>
 </div>
@@ -154,16 +177,15 @@ class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-cente
 		};
 		// Initialize Firebase
 		firebase.initializeApp(firebaseConfig);
-		// Initialize Performance Monitoring and get a reference to the service
-	 	var perf = firebase.performance();
+		// // Initialize Performance Monitoring and get a reference to the service
+	 	// var perf = firebase.performance();
 	</script>
-	<!-- TODO: Add SDKs for Firebase products that you want to use
-		https://firebase.google.com/docs/web/setup#available-libraries -->
+	<!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/setup#available-libraries -->
 		<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-auth.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-performance.js"></script>
+		<!-- <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-performance.js"></script> -->
 		<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
-		<!-- <script src="../src/index.js" type="module"></script> -->
-		<script src="app.js"></script>
+
 		<script src="main.js"></script>
+		<script src="app.js"></script>
 </body>
 </html>

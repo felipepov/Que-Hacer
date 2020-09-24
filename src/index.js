@@ -11,7 +11,6 @@ import * as likesView from './views/likesView.js';
 // Store in localstorage
 
 const state = {};
-
 // *** ACTIVITY CONTROLLER ***
 const controlActivity = async (id) => {
 	// 1) Get existing id or generate random one
@@ -62,7 +61,6 @@ const controlLike = () =>{
 		// Add like to UI list
 		likesView.renderListItem(state.act);
 	}
-	console.log(state.like.likes)
 	// Toggle the like button
 	activityView.clearActivity();
 	activityView.renderActivity(state.act, state.act.liked);
@@ -78,7 +76,7 @@ elements.nav.addEventListener('click', e => {
 			elements.likes.classList.add('hidden');
 		}
 		// Handle Menu
-	} else if (e.target.matches('#generate, #generate *')) {
+	} else if (e.target.matches('#burger, #burger *')) {
 		if (elements.menu.classList.contains('hidden')) {
 			elements.menu.classList.remove('hidden');
 		} else {
@@ -86,8 +84,7 @@ elements.nav.addEventListener('click', e => {
 		}
 	}
 });
-
-elements.activitySection.addEventListener('click', e => { 
+elements.main.addEventListener('click', e => {
 	// Toggle like button
 	if (e.target.matches('#like, #like *')) {
 		controlLike();
