@@ -30,7 +30,7 @@ auth.onAuthStateChanged(user => {
 });
 
 // *** FIRESTORE DATABASE ***
-const db = firebase.firestore()
+const db = firebase.firestore();
 
 const createAct = document.getElementById('createAct');
 const actsList = document.getElementById('actsList');
@@ -43,6 +43,10 @@ auth.onAuthStateChanged(user => {
 
     if (user) {
         actsRef = db.collection('activities');
+        // actsRef.get().then(snap => {
+        //     size = snap.size
+        //     return size
+        //  });
         const actArr = [];
         createAct.onclick = () => {
             if (newAct.elements.name.value != false) {
@@ -71,7 +75,7 @@ auth.onAuthStateChanged(user => {
                 
                 // Map results to an array of li elements
                 const items = querySnapshot.docs.map(doc => {
-                    return `<li class="list-decimal list-inside m-4">${doc.data().name}</li>`
+                    return `<li class="list-decimal list-inside m-4"><h4 class="inline-block">${doc.data().name}</h4></li>`
                 });
 
                 actsList.innerHTML = items.join('');

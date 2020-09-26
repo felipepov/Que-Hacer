@@ -9,5 +9,5 @@
 }
 
 .contributeTitles {
-    @apply text-2xl font-bold mx-2 mb-2 mt-4;
+    @apply text-2xl font-bold mx-2 mb-2 mt-4 text-black;
 }

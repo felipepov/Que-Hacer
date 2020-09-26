@@ -117,11 +117,10 @@ class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-cente
 <!-- Activation to create buttons to filter out content -->
 </div>
 <div class="col-span-6 col-start-2">
-	<section id="whenSignedIn" hidden="true" class="flex justify-evenly p-4 bg-primary-100 border-secondary-light border-2 rounded-md">
+	<section id="whenSignedIn" hidden="true">
+		<div class="flex flex-col justify-evenly p-4 m-8 mt-2 bg-primary-100 border-secondary-light border-2 rounded-md">
 		<div id="userDetails" class="w-1/4 font-Monstserrat text-lg m-2"></div>
 		<button id="signOutBtn" class="bg-white text-black cursor-pointer p-4 m-4 rounded-md">Desconectar</button>
-	</section>
-	<section>
 		<h3 class="font-Monstserrat contributeTitles">Mis Actividades</h3>
 		<ul id="actsList">
 	
@@ -150,12 +149,12 @@ class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-cente
 			<label for="accesibility">Facilidad (0 a 10):</label>
 			<input type="number" name="accesibility"  min="0" max="10" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 && this.value < 10 ? Math.abs(this.value) : null" class="formElement">
 		  </form>
-		<button id="createAct" class="p-4 mx-2 my-4 bg-primary-100 border-2 border-white text-bold rounded-lg">Crear Actividad</button>
-	
+		<button id="createAct" class="p-4 mx-2 my-4 bg-secondary-acc text-bold rounded-lg">Crear Actividad</button>
+	</div>
 	  </section>
 </div>
 </div>
-<footer class="bg-secondary-acc text-sm text-center font-Lato font-light text-secondary-light w-full p-4">
+<footer class="bg-primary-300 text-sm text-center font-Lato font-light text-secondary-light w-full p-4">
 	<h5>Creado por Pip-po</h5>
 </footer>
 

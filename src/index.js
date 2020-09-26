@@ -6,9 +6,10 @@ import * as likesView from './views/likesView.js';
 
 
 // Todo:
-// Fetch user input
-// Post to modified api
-// Store in localstorage
+// - Add user contributed activities to be fetched
+// - Add liked parameter to collection
+// - Add liked activity to database, checking if not already there
+// - Update liked parameter on activity when liked by user
 
 const state = {};
 // *** ACTIVITY CONTROLLER ***
@@ -107,3 +108,13 @@ window.addEventListener('hashchange', function(){
 	}
 });
 
+// Restore liked recipes on page load
+window.addEventListener('load', () => {
+    state.like = new Like();
+    
+    // Restore likes
+    state.like.readStorage();
+
+	// Render the existing likes
+    state.like.likes.forEach(like => likesView.renderListItem(like));
+});

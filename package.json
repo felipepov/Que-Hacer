@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Un sitio para la gente aburrida",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "build-css": "tailwindcss build src/styles.css -o dist/styles.css",
     "start": "webpack",
