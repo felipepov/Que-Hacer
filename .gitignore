@@ -8,3 +8,8 @@ storage.rules
 firebase-debug.log
 ui-debug.log
 database-debug.log
+webpack.prod.js
+webpack.dev.js
+webpack.common.js
+postcss.config.js
+tailwind.config.js
