@@ -3,17 +3,27 @@ import Activity from './modules/Activity.js';
 import Like from './modules/Likes.js';
 import * as activityView from './views/activityView.js';
 import * as likesView from './views/likesView.js';
-
-
-// Todo:
-// - Add user contributed activities to be fetched
-// - Add liked parameter to collection
-// - Add liked activity to database, checking if not already there
-// - Update liked parameter on activity when liked by user
-
+import "./styles.css"
 const state = {};
+// Todo:
+// - Compress images correctly and add images that are later injected
+// - If activity is contributed fetch from database instead of API
+// - Update liked parameter on activity when liked by user
+// - Add liked activity to database with 1 like but if already there update liked parameter
+// - Make it so you display as liked if user id that liked is the same
+
+
+
+
+
+
+
+// ****** API LOGIC ******
+
 // *** ACTIVITY CONTROLLER ***
-const controlActivity = async (id) => {
+const controlActivity = async (id, contribution) => {
+	console.log(contribution)
+	console.log(id)
 	// 1) Get existing id or generate random one
 	const key = parseInt(id, 10)
 	if(key){
@@ -30,17 +40,17 @@ const controlActivity = async (id) => {
 	try {
 		// 3) Fetch API data
 		await state.act.getResults();
-
-		if (state.act.title != undefined) {
+		console.log(state.act.data)
+		if (state.act.title != undefined || contribution == true) {
+			// 4) Render data
 			const liked = state.like ? state.like.isLiked(state.act.key) : false;
 			clearLoader(elements.main);
 			activityView.renderActivity(state.act, liked);
 		} else {
 			console.error('ERROR: Activiy not found, try again')
 		}
-			// 4) Render data
 	} catch (err) {
-		console.log(err);
+		console.error(err);
 	}
 };
 // *** LIKES CONTROLLER ***
@@ -67,7 +77,104 @@ const controlLike = () =>{
 	activityView.renderActivity(state.act, state.act.liked);
 }
 
+
+// ****** APP FIRBASE LOGIC ******
+
+// *** AUTHENTICATION ***
+const auth = firebase.default.auth();
+
+const provider = new firebase.auth.GoogleAuthProvider();
+
+auth.onAuthStateChanged(user => {
+    if (user) {
+        // signed in
+        elements.whenSignedIn.hidden = false;
+        elements.whenSignedOut.hidden = true;
+        elements.userDetails.innerHTML = `<h3>Hola <span class=" font-bold"> ${user.displayName}</span>!</h3> <p>ID de Usuario: <span class=" font-bold">${user.uid}</span></p>`;
+    } else {
+        // not signed in
+        elements.whenSignedIn.hidden = true;
+        elements.whenSignedOut.hidden = false;
+        elements.userDetails.innerHTML = '';
+    }
+});
+
+// *** FIRESTORE DATABASE ***
+const db = firebase.firestore();
+
+let actsRef;
+let unsubscribe;
+let counter;
+
+auth.onAuthStateChanged(user => {
+    if (user) {
+		actsRef = db.collection('activities');
+        elements.createAct.onclick = () => {
+			// const createKey = async () => {
+			// 	try {
+			// 		let fetchedKey = await state.act.getResults().key;
+			// 		for(let key =  Math.floor(Math.random() * 1000000); key === parseInt(fetchedKey, 10); key++){
+			// 			fetchedKey = await state.act.getResults().key;
+			// 		}
+			// 	} catch (err) {
+			// 		console.error(err);
+			// 	}
+			// }
+            if (elements.newAct.elements.name.value != false) {
+                const actAdd = {
+					key: 10000001 + counter,
+					uid: user.uid,
+					uname: user.displayName,
+                    title: elements.newAct.elements.name.value,
+                    type: elements.newAct.elements.type.value,
+                    people: elements.newAct.elements.participants.value,
+                    price: elements.newAct.elements.price.value / 10,
+					access: elements.newAct.elements.accesibility.value / 10,
+					createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+					link: '',
+					liked: false,
+				};
+
+				// Integration with Client Side API logic
+				console.log(actAdd)
+				console.log(actAdd == true)
+				controlActivity(actAdd.key, actAdd);
+
+                actsRef.add(actAdd);
+                for (let i = 0; i < elements.newAct.elements.length; i++) {
+                    elements.newAct.elements[i].value = '';
+                }
+            }
+        }
+            // Query
+            unsubscribe = actsRef
+            .orderBy('createdAt') // Requires a query
+            .onSnapshot(querySnapshot => {  
+				counter = querySnapshot.docs.length;
+                // Map results to an array of li elements
+                const items = querySnapshot.docs.map(doc => {
+                    return `<li class="list-decimal list-inside m-4"><h4 class="inline-block"><a href="#${doc.data().key}" class="font-bold cursor-pointer">${doc.data().title}</a>- agregada por <span class="italic">${doc.data().uname}</span></h4></li>`
+				});
+                elements.actsList.innerHTML = items.join('');
+			});
+
+    } else {
+        // Unsubscribe when the user signs out
+        unsubscribe && unsubscribe();
+    }
+
+});
+
+
+
+
 // *** EVENT HANDLING ***
+/// Sign in event handlers
+elements.signInBtn.onclick = () => auth.signInWithPopup(provider);
+elements.signOutBtn.onclick = () => auth.signOut();
+
+
+
 elements.nav.addEventListener('click', e => {
 	if (e.target.matches('#likesBtn, #likesBtn *')) {
 		// Handle Likes Button

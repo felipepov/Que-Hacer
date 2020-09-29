@@ -4,7 +4,17 @@ export const elements = {
     likes: document.querySelector('#likes'),
     activitySection: document.querySelector('#section1'),
     main : document.querySelector('#main'),
-    likeToggle : document.querySelector('#like')
+    likeToggle : document.querySelector('#like'),
+
+    whenSignedIn : document.getElementById('whenSignedIn'),
+    whenSignedOut : document.getElementById('whenSignedOut'),
+    signInBtn : document.getElementById('signInBtn'),
+    signOutBtn : document.getElementById('signOutBtn'),
+    userDetails : document.getElementById('userDetails'),
+
+    createAct : document.getElementById('createAct'),
+    actsList : document.getElementById('actsList'),
+    newAct : document.getElementById('newAct')
 };
 
 export const renderLoader = parent => {

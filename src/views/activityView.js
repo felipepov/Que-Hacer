@@ -7,7 +7,7 @@ export const renderActivity = (activity, isLiked) => {
 							activity.link
 						}">${activity.title}</a></h3>
                 <div class="bg-primary-200 px-6 py-2 cursor-pointer" id="like">
-                    <img class="pointer hover:scale-110 transition-transform" src="img/like-${isLiked}.svg" alt="" srcset="">
+                    <img class="pointer hover:scale-110 transition-transform" src="assets/like-${isLiked}.svg" alt="" srcset="">
                 </div>
             </div>
             <div class="h-1 bg-primary-200"></div>
@@ -15,19 +15,19 @@ export const renderActivity = (activity, isLiked) => {
                     <h4>Categoria: <span class="font-bold capitalize">${
 											activity.type
 										}</span></h4>
-                    <img src="img/${activity.type}.svg" heigh="48" width="48">
+                    <img src="assets/${activity.type}.svg" heigh="48" width="48">
                     <h4>Participantes: <span class="font-bold">${
 											activity.people
 										}</span></h4>
-                    <img src="img/participants.svg" heigh="48" width="48">
+                    <img src="assets/participants.svg" heigh="48" width="48">
                     <h4>Accesibilidad: <span class="font-bold">${Math.round(
 											activity.access * 10
 										)} / 10</span></h4>
-                    <img src="img/accesibility.svg" heigh="48" width="48">
+                    <img src="assets/accesibility.svg" heigh="48" width="48">
                     <h4>Precio: <span class="font-bold">${Math.round(
 											activity.price * 10
 										)} / 10</span></h4>
-                    <img src="img/price.svg" heigh="48" width="48">
+                    <img src="assets/price.svg" heigh="48" width="48">
                 </div>
     `;
 	elements.activitySection.insertAdjacentHTML('afterbegin', markup);
