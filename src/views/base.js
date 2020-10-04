@@ -15,6 +15,7 @@ export const elements = {
     activitySection: document.querySelector('#section1'),
     main : document.querySelector('#main'),
     likeToggle : document.querySelector('#like'),
+    body: document.querySelector('#body'),
 
     whenSignedIn : document.getElementById('whenSignedIn'),
     whenSignedOut : document.getElementById('whenSignedOut'),

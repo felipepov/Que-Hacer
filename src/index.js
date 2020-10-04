@@ -4,7 +4,6 @@ import Like from './modules/Likes.js';
 import * as activityView from './views/activityView.js';
 import * as likesView from './views/likesView.js';
 import "./styles.css"
-const state = {};
 // Todo:
 // - Compress images correctly
 // - If activity is contributed fetch from database instead of API
@@ -14,23 +13,29 @@ const state = {};
 
 
 
-
+const state = {};
+state.api = true;
 
 
 
 // ****** API LOGIC ******
 
 // *** ACTIVITY CONTROLLER ***
-const controlActivity = async (id, contribution) => {
-	console.log(contribution)
-	console.log(id)
+const controlActivity = async (id, contribution = undefined) => {
+	if (contribution != undefined) {
+		state.api = false
+	}
 	// 1) Get existing id or generate random one
-	const key = parseInt(id, 10)
-	if(key){
-		state.act = new Activity(key);
-	}	
-	else {
-		state.act = new Activity();
+	if (state.api) {
+		const key = parseInt(id, 10)
+		if(key){
+			state.act = new Activity(key);
+		}	
+		else {
+			state.act = new Activity();
+		}
+	} else {
+		state.act = new Activity(id, contribution)
 	}
 
 	// 2) Prepare UI
@@ -40,8 +45,8 @@ const controlActivity = async (id, contribution) => {
 	try {
 		// 3) Fetch API data
 		await state.act.getResults();
-		console.log(state.act.data)
-		if (state.act.title != undefined || contribution == true) {
+		console.log(state.act)
+		if (state.act.title != undefined) {
 			// 4) Render data
 			const liked = state.like ? state.like.isLiked(state.act.key) : false;
 			clearLoader(elements.main);
@@ -110,16 +115,6 @@ auth.onAuthStateChanged(user => {
     if (user) {
 		actsRef = db.collection('activities');
         elements.createAct.onclick = () => {
-			// const createKey = async () => {
-			// 	try {
-			// 		let fetchedKey = await state.act.getResults().key;
-			// 		for(let key =  Math.floor(Math.random() * 1000000); key === parseInt(fetchedKey, 10); key++){
-			// 			fetchedKey = await state.act.getResults().key;
-			// 		}
-			// 	} catch (err) {
-			// 		console.error(err);
-			// 	}
-			// }
             if (elements.newAct.elements.name.value != false) {
                 const actAdd = {
 					key: 10000001 + counter,
@@ -136,11 +131,9 @@ auth.onAuthStateChanged(user => {
 				};
 
 				// Integration with Client Side API logic
-				console.log(actAdd)
-				console.log(actAdd == true)
 				controlActivity(actAdd.key, actAdd);
 
-                actsRef.add(actAdd);
+                // actsRef.add(actAdd); // Add to database, disable on devlopment, enable on production
                 for (let i = 0; i < elements.newAct.elements.length; i++) {
                     elements.newAct.elements[i].value = '';
                 }
@@ -192,12 +185,13 @@ elements.nav.addEventListener('click', e => {
 		}
 	}
 });
-elements.main.addEventListener('click', e => {
+elements.body.addEventListener('click', e => {
 	// Toggle like button
+
 	if (e.target.matches('#like, #like *')) {
 		controlLike();
 		// Generate new activity
-	} else if (e.target.matches('#generate, #generate *')) {
+	} else if (e.target.matches('#generate, #generate *' || e.target.matches('#createAct, #createAct *'))) {
 		controlActivity();
 		if (elements.activitySection.classList.contains('hidden')) {
 			elements.activitySection.classList.remove('hidden');

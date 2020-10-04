@@ -1,10 +1,10 @@
 export default class Activy {
-	constructor(key = '', contributedData = false) {
+	constructor(key = '', contributedData = undefined) {
 			this.key = key;
 			this.data = contributedData
 	}
 	async getResults() {
-		if (!this.data){
+		if (this.data == undefined){
 			try {
 				const res = await fetch(
 					`https://www.boredapi.com/api/activity?key=${this.key}`
@@ -22,7 +22,14 @@ export default class Activy {
 				console.log(err);
 			}
 		} else {
-			console.log('This activity did not come from API')
+			this.title = this.data.title;
+			this.type = this.data.type;
+			this.people = this.data.people;
+			this.price = this.data.price;
+			this.link = this.data.link;
+			this.access = this.data.access;
+			this.liked = this.data.liked;
+			this.key = this.data.key;
 		}
 	}
 }
