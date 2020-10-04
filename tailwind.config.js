@@ -1,6 +1,9 @@
   
 module.exports = {
-  purge: [],
+  purge: {
+    enabled: false,
+    content: ['./**/*.html','./**/*.js',], // Add you files in this array instead of the purge array. 
+  },
   theme: {
     extend: {
       colors: {

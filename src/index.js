@@ -6,7 +6,7 @@ import * as likesView from './views/likesView.js';
 import "./styles.css"
 const state = {};
 // Todo:
-// - Compress images correctly and add images that are later injected
+// - Compress images correctly
 // - If activity is contributed fetch from database instead of API
 // - Update liked parameter on activity when liked by user
 // - Add liked activity to database with 1 like but if already there update liked parameter
