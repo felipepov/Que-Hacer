@@ -6,15 +6,13 @@ import * as likesView from './views/likesView.js';
 import "./styles.css"
 // Todo:
 // - Compress images correctly
-// - If activity is contributed fetch from database instead of API
 // - Update liked parameter on activity when liked by user
 // - Add liked activity to database with 1 like but if already there update liked parameter
-// - Make it so you display as liked if user id that liked is the same
+// - Make it so you display as liked if user id that liked is the same (having the liked activities on the cloud)
 
 
 
 const state = {};
-state.api = true;
 
 
 
@@ -22,20 +20,13 @@ state.api = true;
 
 // *** ACTIVITY CONTROLLER ***
 const controlActivity = async (id, contribution = undefined) => {
-	if (contribution != undefined) {
-		state.api = false
-	}
 	// 1) Get existing id or generate random one
-	if (state.api) {
-		const key = parseInt(id, 10)
-		if(key){
-			state.act = new Activity(key);
-		}	
-		else {
-			state.act = new Activity();
-		}
-	} else {
-		state.act = new Activity(id, contribution)
+	const key = parseInt(id, 10)
+	if(key){
+		state.act = new Activity(key, contribution);
+	}	
+	else {
+		state.act = new Activity('', contribution);
 	}
 
 	// 2) Prepare UI
@@ -45,7 +36,6 @@ const controlActivity = async (id, contribution = undefined) => {
 	try {
 		// 3) Fetch API data
 		await state.act.getResults();
-		console.log(state.act)
 		if (state.act.title != undefined) {
 			// 4) Render data
 			const liked = state.like ? state.like.isLiked(state.act.key) : false;
@@ -117,7 +107,7 @@ auth.onAuthStateChanged(user => {
         elements.createAct.onclick = () => {
             if (elements.newAct.elements.name.value != false) {
                 const actAdd = {
-					key: 10000001 + counter,
+					key: 1000001 + counter,
 					uid: user.uid,
 					uname: user.displayName,
                     title: elements.newAct.elements.name.value,
@@ -132,8 +122,11 @@ auth.onAuthStateChanged(user => {
 
 				// Integration with Client Side API logic
 				controlActivity(actAdd.key, actAdd);
-
-                // actsRef.add(actAdd); // Add to database, disable on devlopment, enable on production
+				actsRef.doc(`${actAdd.key}`).set(actAdd)
+                // Add like to the state
+				state.act.liked = state.like.addLike(actAdd.key, actAdd.title, actAdd.type);
+				// Add like to UI list
+				likesView.renderListItem(state.act);
                 for (let i = 0; i < elements.newAct.elements.length; i++) {
                     elements.newAct.elements[i].value = '';
                 }
@@ -191,7 +184,7 @@ elements.body.addEventListener('click', e => {
 	if (e.target.matches('#like, #like *')) {
 		controlLike();
 		// Generate new activity
-	} else if (e.target.matches('#generate, #generate *' || e.target.matches('#createAct, #createAct *'))) {
+	} else if (e.target.matches('#generate, #generate *') || e.target.matches('#createAct, #createAct *')) {
 		controlActivity();
 		if (elements.activitySection.classList.contains('hidden')) {
 			elements.activitySection.classList.remove('hidden');
@@ -200,13 +193,24 @@ elements.body.addEventListener('click', e => {
 });
 	
 // Check for inputted activity
-window.addEventListener('hashchange', function(){
-	if (state.act) {
-		const id = window.location.hash.replace('#', '');
-		if(id >= 1000000 && id <= 9999999) {
-			controlActivity(id);
-		}
+const getAct = async (id) => {
+	const activity = db.collection('activities').doc(`${id}`);
+	const doc = await activity.get();
+	if (!doc.exists) {
+		controlActivity(id);
+	} else {
+		controlActivity(id, doc.data())
 	}
+}
+
+window.addEventListener('hashchange', function(){
+	const id = window.location.hash.replace('#', '');
+	if(id >= 1000000 && id <= 9999999) {
+		getAct(id)
+		if (elements.activitySection.classList.contains('hidden')) {
+			elements.activitySection.classList.remove('hidden');
+		}
+	} 
 });
 
 // Restore liked recipes on page load
