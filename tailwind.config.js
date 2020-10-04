@@ -1,7 +1,7 @@
   
 module.exports = {
   purge: {
-    enabled: false,
+    enabled: false, // Enable true to purge (production) and disable false to not purge (development)
     content: ['./**/*.html','./**/*.js',], // Add you files in this array instead of the purge array. 
   },
   theme: {

@@ -1,3 +1,13 @@
+import busyworkImg from '../assets/busywork.svg';
+import charityImg from '../assets/charity.svg';
+import relaxationImg from '../assets/relaxation.svg';
+import musicImg from '../assets/music.svg';
+import socialImg from '../assets/social.svg';
+import recreationalImg from '../assets/recreational.svg';
+import diyImg from '../assets/diy.svg';
+import cookingImg from '../assets/cooking.svg';
+import educationImg from '../assets/education.svg';
+
 export const elements = {
     nav: document.querySelector('#nav'),
     menu: document.querySelector('#menu'),
@@ -16,6 +26,43 @@ export const elements = {
     actsList : document.getElementById('actsList'),
     newAct : document.getElementById('newAct')
 };
+
+export const getImage = (type) => {
+    let actImg;
+    switch (type) {
+      case 'busywork' :
+        actImg = busyworkImg;
+        break;
+      case 'charity' :
+        actImg = charityImg;
+        break;
+      case 'cooking' :
+        actImg = cookingImg;
+        break;
+      case 'diy' :
+        actImg = diyImg;
+        break;
+      case 'education' :
+        actImg = educationImg;
+        break;
+      case 'music' :
+        actImg = musicImg;
+        break;
+      case 'recreational' :
+        actImg = recreationalImg;
+        break;
+      case 'relaxation' :
+        actImg = relaxationImg;
+        break;
+      case 'social' :
+        actImg = socialImg;
+        break;
+      default :
+      actImg = '';
+    }
+
+    return actImg;
+}
 
 export const renderLoader = parent => {
     const markup = `

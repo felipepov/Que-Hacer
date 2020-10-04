@@ -1,4 +1,4 @@
-import { elements } from './base.js';
+import { elements, getImage} from './base.js';
 
 import accessImg from '../assets/accesibility.svg';
 import priceImg from '../assets/price.svg';
@@ -7,16 +7,6 @@ import partImg from '../assets/participants.svg';
 import likeTrueImg from '../assets/like-true.svg';
 import likeFalseImg from '../assets/like-false.svg';
 
-import busyworkImg from '../assets/busywork.svg';
-import charityImg from '../assets/charity.svg';
-import relaxationImg from '../assets/relaxation.svg';
-import musicImg from '../assets/music.svg';
-import socialImg from '../assets/social.svg';
-import recreationalImg from '../assets/recreational.svg';
-import diyImg from '../assets/diy.svg';
-import cookingImg from '../assets/cooking.svg';
-import educationImg from '../assets/education.svg';
-
 export const renderActivity = (activity, isLiked) => {
   let likeImg;
   if (isLiked) {
@@ -24,39 +14,6 @@ export const renderActivity = (activity, isLiked) => {
   } else {
     likeImg = likeFalseImg
   };
-
-  let actImg;
-  switch (activity.type) {
-    case 'busywork' :
-      actImg = busyworkImg;
-      break;
-    case 'charity' :
-      actImg = charityImg;
-      break;
-    case 'cooking' :
-      actImg = cookingImg;
-      break;
-    case 'diy' :
-      actImg = diyImg;
-      break;
-    case 'education' :
-      actImg = educationImg;
-      break;
-    case 'music' :
-      actImg = musicImg;
-      break;
-    case 'recreational' :
-      actImg = recreationalImg;
-      break;
-    case 'relaxation' :
-      actImg = relaxationImg;
-      break;
-    case 'social' :
-      actImg = socialImg;
-      break;
-    default :
-    actImg = '';
-  }
 
 	const markup = `     
                 <div class="flex justify-between items-center ">
@@ -72,7 +29,7 @@ export const renderActivity = (activity, isLiked) => {
                     <h4>Categoria: <span class="font-bold capitalize">${
 											activity.type
 										}</span></h4>
-                    <img src="${actImg}" heigh="48" width="48">
+                    <img src="${getImage(activity.type)}" heigh="48" width="48">
                     <h4>Participantes: <span class="font-bold">${
 											activity.people
 										}</span></h4>
