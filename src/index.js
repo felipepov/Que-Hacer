@@ -42,7 +42,13 @@ const controlActivity = async (id, contribution = undefined) => {
 			clearLoader(elements.main);
 			activityView.renderActivity(state.act, liked);
 		} else {
+			clearLoader(elements.main);
+			activityView.renderActivity(undefined, false);
 			console.error('ERROR: Activiy not found, try again')
+			// Remove like from the state
+			state.act.liked = state.like.deleteLike(key);
+			// Remove like from UI list
+			likesView.deleteListItem(key)
 		}
 	} catch (err) {
 		console.error(err);
@@ -195,11 +201,15 @@ elements.body.addEventListener('click', e => {
 // Check for inputted activity
 const getAct = async (id) => {
 	const activity = db.collection('activities').doc(`${id}`);
-	const doc = await activity.get();
-	if (!doc.exists) {
+	try {
+		const doc = await activity.get();
+		if (!doc.exists) {
+			controlActivity(id);
+		} else {
+			controlActivity(id, doc.data())
+		}
+	} catch(err){
 		controlActivity(id);
-	} else {
-		controlActivity(id, doc.data())
 	}
 }
 

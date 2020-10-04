@@ -29,7 +29,6 @@ export default class Activy {
 			this.link = this.data.link;
 			this.access = this.data.access;
 			this.liked = this.data.liked;
-			this.key = this.data.key;
 		}
 	}
 }

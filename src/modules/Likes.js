@@ -2,7 +2,7 @@ export default class Likes {
     constructor(){
         this.likes = [];
     }
-    addLike(key, title, type,) {
+    addLike(key, title, type) {
         const like = {key, title, type };
         this.likes.push(like);
 
