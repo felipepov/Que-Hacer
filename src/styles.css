@@ -16,3 +16,7 @@
 .wrapper{
     @apply flex flex-col w-full;
 }
+
+.button{
+    @apply cursor-pointer transform transition-transform;
+}

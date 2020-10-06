@@ -8,6 +8,9 @@ import diyImg from '../assets/diy.svg';
 import cookingImg from '../assets/cooking.svg';
 import educationImg from '../assets/education.svg';
 
+import likeTrueImg from '../assets/like-true.svg';
+import likeFalseImg from '../assets/like-false.svg';
+
 export const elements = {
     nav: document.querySelector('#nav'),
     menu: document.querySelector('#menu'),
@@ -27,6 +30,16 @@ export const elements = {
     actsList : document.getElementById('actsList'),
     newAct : document.getElementById('newAct')
 };
+
+export const getLikeImage = (liked) =>{
+  let likeImg;
+  if (liked) {
+    likeImg = likeTrueImg
+  } else {
+    likeImg = likeFalseImg
+  };
+  return likeImg
+}
 
 export const getImage = (type) => {
     let actImg;
