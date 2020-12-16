@@ -2,7 +2,8 @@ export default class Likes {
     constructor(){
         this.likes = [];
     }
-    addLike(key, title, type) {
+    addLike(id, title, type) {
+        const key = parseInt(id);
         const like = {key, title, type };
         this.likes.push(like);
 
@@ -12,7 +13,7 @@ export default class Likes {
     }
 
     deleteLike(id) {
-        const index = this.likes.findIndex(el => el.key === id);
+        const index = this.likes.findIndex(el => el.key == id);
         this.likes.splice(index, 1);
         
         // Perist data in localStorage
@@ -22,7 +23,8 @@ export default class Likes {
     }
 
     isLiked(id) {
-        return this.likes.findIndex(el => el.key === id) !== -1;
+        const bool = this.likes.findIndex(el => el.key == id);
+        return bool !== -1;
     }
 
     getLast(){
@@ -37,6 +39,8 @@ export default class Likes {
         const storage = JSON.parse(localStorage.getItem('likes'));
         
         // Restoring likes from the localStorage
-        if (storage) this.likes = storage;
+        if (storage) {this.likes = storage};
+        console.log('Likes')
+        console.log(this.likes)
     }
 }

@@ -2,10 +2,10 @@ const db = firebase.firestore();
 
 export default class AppActivity {
 	constructor(key) {
-        this.key = key;
+		this.key = key;
 	}
 	async getData() {
-        const activity = db.collection('activities').doc(`${this.key}`);
+		const activity = db.collection('activities').doc(`${this.key}`);
 		try {
 			const doc = await activity.get();
 			if (!doc.exists) {
@@ -19,35 +19,34 @@ export default class AppActivity {
 		}
 	}
 	async updateLike(bool) {
-        const activity = db.collection('activities').doc(`${this.key}`);
-			try {
-				const oldDoc = await activity.get();
-				if (!oldDoc.exists) {
-					return false;
-				} else {
-                    if(bool) {
+		const activity = db.collection('activities').doc(`${this.key}`);
+		try {
+			const oldDoc = await activity.get();
+			if (!oldDoc.exists) {
+				return false;
+			} else {
+				if (bool) {
 					try {
 						await activity.update({
-							liked:  oldDoc.data().liked + 1,
+							liked: oldDoc.data().liked + 1,
 						});
 						return true;
 					} catch (err) {
 						return false;
-                    }
-                } else {
-                    try {
+					}
+				} else {
+					try {
 						await activity.update({
-							liked:  oldDoc.data().liked - 1,
+							liked: oldDoc.data().liked - 1,
 						});
 						return true;
 					} catch (err) {
 						return false;
-                    }
-                }
+					}
 				}
-			} catch (err) {
-				return false;
 			}
-		
+		} catch (err) {
+			return false;
+		}
 	}
 }

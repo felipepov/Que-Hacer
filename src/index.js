@@ -12,10 +12,10 @@ import * as likesView from './views/likesView.js';
 import './styles.css';
 // Todo:
 // - Compress images correctly
-// - Make it so you display as liked if user id that liked is the same (having the liked activities on the cloud)
+// - Translate everything
+// - App Likes
 
 const state = {};
-
 // ****** API LOGIC ******
 
 // *** ACTIVITY CONTROLLER ***
@@ -35,116 +35,130 @@ const controlActivity = async (id, contribution = undefined) => {
 	try {
 		// 3) Fetch API data
 		await state.act.getResults();
-		if (state.act.title != undefined) {
-			// 4) Render data
-			const user = firebase.auth().currentUser;
-			const userData = db.collection('users').doc(user.uid);
-			userData.get().then((doc) => {
-			const liked = state.like ? doc.data().likes.includes(state.act.key) || state.like.isLiked(state.act.key) : false
-			clearLoader(elements.main);
-			activityView.renderActivity(state.act, liked);
-		})
-		} else {
-			clearLoader(elements.main);
-			activityView.renderActivity(undefined, false);
-			console.error('ERROR: Activiy not found, try again');
-			// Remove like from the state
-			state.act.liked = state.like.deleteLike(key);
-			// Remove like from UI list
-			likesView.deleteListItem(key);
-		}
 	} catch (err) {
 		console.error(err);
 	}
+	if (state.act.title != undefined) {
+		let liked;
+		// 4) Render data
+		const user = firebase.auth().currentUser;
+		if (user) {
+			const userData = db.collection('users').doc(user.uid);
+			liked = await userData.get().then((doc) => {
+				return doc.data().likes.some((i) => i.key == state.act.key)
+			});
+		} else {
+			liked = state.like.isLiked(state.act.key);
+		}
+		console.log('Is it liked? ' + liked)
+		clearLoader(elements.main);
+		activityView.renderActivity(state.act, liked);
+	} else {
+		activityView.clearActivity();
+		clearLoader(elements.main);
+		activityView.renderActivity(undefined, false);
+		console.error('ERROR: Activiy not found, try again');
+		// Remove like from the state
+		state.act.liked = state.like.deleteLike(key);
+		// Remove like from UI list
+		likesView.deleteListItem(key);
+	}
 };
 // *** APP CONTROLLER ***
-const controlApp = async (likeType) =>{
+const controlApp = async (likeType) => {
 	if (state.app.key) {
 		try {
 			await state.app.updateLike(likeType);
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	} else {
-		console.log('Key not found');
+		console.error('Key not found');
 	}
-}
-
+};
 
 // *** LIKES CONTROLLER ***
 const controlLike = async () => {
-	const user = firebase.auth().currentUser;
 	activityView.clearActivity();
 	clearLoader(elements.main);
 	renderLoader(elements.main);
-	if (user) {
-		if (!state.like) {
-			state.like = new Like();
-		}
-						// User HAS liked current recipe
-				if ( state.like.isLiked(state.act.key)) {
 
-
-					// Remove like from the state
-					state.act.liked = state.like.deleteLike(state.act.key);
-					// Remove like from UI list
-					likesView.deleteListItem(state.act.key);
-
-				}
-				// User HAS NOT liked current recipe
-				else {
-					// Add like to the state
-					state.act.liked = state.like.addLike(
-						state.act.key,
-						state.act.title,
-						state.act.type
-					);
-					// Add like to UI list
-					likesView.renderListItem(state.act);
-				}
-		// Add user information
-		const userData = db.collection('users').doc(user.uid)
-		userData.get().then(function(doc) {
-			if (doc.exists) {
-				let cloudData = {likes: doc.data().likes}
-				state.act.liked = cloudData.likes.includes(state.act.key)
-				if (state.act.liked){
-					// Update user likes
-					const index = cloudData.likes.findIndex(el => el === state.act.key);
-					cloudData.likes.splice(index, 1);
-
-					// Update on app
-					controlApp(false)
-					
-					state.act.liked = false;
-				} else {
-					// Update user likes
-					cloudData.likes.push(state.act.key)
-
-					// Update app
-					controlApp(true)
-
-					state.act.liked = true;
-				}
-				userData.set(cloudData)
-			} else {
-				userData.set({
-					likes: [state.act.key]
-				})
-			}
-
-		// Toggle the like button
-		activityView.clearActivity();
-		clearLoader(elements.main);
-		activityView.renderActivity(state.act, state.act.liked);
-		}).catch(function(error) {
-			console.log("Error al buscar documento:", error);
-		});
-	} else {
-		activityView.clearActivity();
-		clearLoader(elements.main);
-		activityView.renderActivity(undefined, true);
+	if (!state.like) {
+		state.like = new Like();
 	}
+
+	// User HAS liked current activity
+	if (state.like.isLiked(state.act.key)) {
+		// Remove like from the state
+		state.act.liked = state.like.deleteLike(state.act.key);
+		// Remove like from UI list
+		likesView.deleteListItem(state.act.key);
+	}
+	// User HAS NOT liked current activity
+	else {
+		// Add like to the state
+		state.act.liked = state.like.addLike(
+			state.act.key,
+			state.act.title,
+			state.act.type
+		);
+		// Add like to UI list
+		likesView.renderListItem(state.act);
+	}
+	const user = firebase.auth().currentUser;
+	if (user) {
+		// Add user information
+		const userData = db.collection('users').doc(user.uid);
+		userData
+			.get()
+			.then(function (doc) {
+				if (doc.exists) {
+					state.app = new AppActivity(parseInt(state.act.key));
+					let cloudData = doc.data().likes;
+					state.act.liked = cloudData.some((i) => i.key == state.act.key);
+					if (state.act.liked) {
+						// Update user likes
+						const index = cloudData.findIndex((el) => el.key == state.act.key);
+						cloudData.splice(index, 1);
+
+						// Update on app
+						controlApp(false);
+
+						state.act.liked = false;
+					} else {
+						// Update user likes
+						cloudData.push({
+							key: parseInt(state.act.key),
+							title: state.act.title,
+							type: state.act.type,
+						});
+
+						// Update app
+						controlApp(true);
+
+						state.act.liked = true;
+					}
+					userData.set({ likes: cloudData });
+				} else {
+					userData.set({
+						likes: [
+							{
+								key: parseInt(state.act.key),
+								title: state.act.title,
+								type: state.act.type,
+							},
+						],
+					});
+				}
+			})
+			.catch(function (error) {
+				console.error('Error al buscar documento:', error);
+			});
+	}
+	// Toggle the like button
+	activityView.clearActivity();
+	clearLoader(elements.main);
+	activityView.renderActivity(state.act, state.act.liked);
 };
 
 // ****** APP FIRBASE LOGIC ******
@@ -159,7 +173,7 @@ auth.onAuthStateChanged((user) => {
 		// signed in
 		elements.whenSignedIn.hidden = false;
 		elements.whenSignedOut.hidden = true;
-		elements.userDetails.innerHTML = `<h3>Hola <span class=" font-bold"> ${user.displayName}</span>!</h3> <p>ID de Usuario: <span class=" font-bold">${user.uid}</span></p>`;
+		elements.userDetails.innerHTML = `<h3>Hola <span class=" font-bold"> ${user.displayName}</span>!</h3> <p>ID de Usuario: <span class=" font-bold">${user.uid}</span><br><span>Para hacer <b>sync </b>de tus me gustas ponle me gusta a cualquier actividad!</p>`;
 	} else {
 		// not signed in
 		elements.whenSignedIn.hidden = true;
@@ -172,12 +186,33 @@ auth.onAuthStateChanged((user) => {
 const db = firebase.firestore();
 
 let actsRef;
+let userData;
 let unsubscribe;
 let counter;
 
 auth.onAuthStateChanged((user) => {
 	if (user) {
+		userData = db.collection('users').doc(user.uid);
+		userData.get().then(function (doc) {
+				if (doc.exists) {
+					let cloudData = doc.data().likes;
+					userData.set({ likes: cloudData });
+
+					state.like.likes.forEach(like => likesView.deleteListItem(like.key))
+					console.log('Likes before user')
+					console.log(state.like.likes)
+					console.log('Likes from cloud about to be added')
+					console.log(cloudData)
+					state.like.likes = cloudData;
+					console.log('Likes when user')
+					console.log(state.like.likes)
+					state.like.likes.forEach(like => likesView.renderListItem(like));}
+				})
+				.catch(function (error) {
+					console.error('Error al buscar documento:', error);
+				});
 		actsRef = db.collection('activities');
+
 		elements.createAct.onclick = () => {
 			if (elements.newAct.elements.name.value != false) {
 				const actAdd = {
@@ -282,18 +317,25 @@ elements.body.addEventListener('click', (e) => {
 
 // Check for inputted activity
 window.addEventListener('hashchange', async function () {
+	activityView.clearActivity();
+	clearLoader(elements.main);
+	renderLoader(elements.main);
+	if (elements.activitySection.classList.contains('hidden')) {
+		elements.activitySection.classList.remove('hidden');
+	}
 	const id = window.location.hash.replace('#', '');
-	state.app = new AppActivity(id);
+	state.app = new AppActivity(parseInt(id));
 	if (id >= 1000000 && id <= 9999999) {
 		try {
-			const call = await state.app.getData(id);
+			const call = await state.app.getData();
+			clearLoader(elements.main)
 			if (call) {
 				controlActivity(id, state.app.data);
 			} else {
 				controlActivity(id);
 			}
 		} catch (err) {
-			console.log('Something went wrong');
+			console.error('Something went wrong');
 			console.error(err);
 		}
 		if (elements.activitySection.classList.contains('hidden')) {
