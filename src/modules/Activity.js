@@ -19,7 +19,7 @@ export default class Activy {
 				this.key = res.key;
 				return res;
 			} catch (err) {
-				console.log(err);
+				console.error(err);
 			}
 		} else {
 			this.title = this.data.title;

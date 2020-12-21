@@ -13,9 +13,16 @@ import './styles.css';
 // Todo:
 // - Compress images correctly
 // - Translate everything
-// - App Likes
+// - Filter actvities implmentations
 
 const state = {};
+const user = firebase.auth().currentUser;
+const db = firebase.firestore();
+
+let actsRef;
+let userData;
+let unsubscribe;
+let counter;
 // ****** API LOGIC ******
 
 // *** ACTIVITY CONTROLLER ***
@@ -41,16 +48,14 @@ const controlActivity = async (id, contribution = undefined) => {
 	if (state.act.title != undefined) {
 		let liked;
 		// 4) Render data
-		const user = firebase.auth().currentUser;
 		if (user) {
-			const userData = db.collection('users').doc(user.uid);
+			userData = db.collection('users').doc(user.uid);
 			liked = await userData.get().then((doc) => {
 				return doc.data().likes.some((i) => i.key == state.act.key)
 			});
 		} else {
 			liked = state.like.isLiked(state.act.key);
 		}
-		console.log('Is it liked? ' + liked)
 		clearLoader(elements.main);
 		activityView.renderActivity(state.act, liked);
 	} else {
@@ -105,10 +110,9 @@ const controlLike = async () => {
 		// Add like to UI list
 		likesView.renderListItem(state.act);
 	}
-	const user = firebase.auth().currentUser;
 	if (user) {
 		// Add user information
-		const userData = db.collection('users').doc(user.uid);
+		userData = db.collection('users').doc(user.uid);
 		userData
 			.get()
 			.then(function (doc) {
@@ -183,12 +187,7 @@ auth.onAuthStateChanged((user) => {
 });
 
 // *** FIRESTORE DATABASE ***
-const db = firebase.firestore();
 
-let actsRef;
-let userData;
-let unsubscribe;
-let counter;
 
 auth.onAuthStateChanged((user) => {
 	if (user) {
@@ -199,13 +198,7 @@ auth.onAuthStateChanged((user) => {
 					userData.set({ likes: cloudData });
 
 					state.like.likes.forEach(like => likesView.deleteListItem(like.key))
-					console.log('Likes before user')
-					console.log(state.like.likes)
-					console.log('Likes from cloud about to be added')
-					console.log(cloudData)
 					state.like.likes = cloudData;
-					console.log('Likes when user')
-					console.log(state.like.likes)
 					state.like.likes.forEach(like => likesView.renderListItem(like));}
 				})
 				.catch(function (error) {
@@ -221,12 +214,12 @@ auth.onAuthStateChanged((user) => {
 					uname: user.displayName,
 					title: elements.newAct.elements.name.value,
 					type: elements.newAct.elements.type.value,
-					people: elements.newAct.elements.participants.value,
+					people: parseInt(elements.newAct.elements.participants.value),
 					price: elements.newAct.elements.price.value / 10,
 					access: elements.newAct.elements.accesibility.value / 10,
 					createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 					link: '',
-					liked: false,
+					liked: 0,
 				};
 
 				// Integration with Client Side API logic
@@ -279,7 +272,14 @@ auth.onAuthStateChanged((user) => {
 // *** EVENT HANDLING ***
 /// Sign in event handlers
 elements.signInBtn.onclick = () => auth.signInWithPopup(provider);
-elements.signOutBtn.onclick = () => auth.signOut();
+elements.signOutBtn.onclick = () => {
+	auth.signOut();
+	state.like.likes.forEach(like => likesView.deleteListItem(like.key))
+	state.like = new Like();
+	window.location.hash = '';
+	state.like.readStorage();
+	state.like.likes.forEach((like) => likesView.renderListItem(like));
+}
 
 elements.nav.addEventListener('click', (e) => {
 	if (e.target.matches('#likesBtn, #likesBtn *')) {

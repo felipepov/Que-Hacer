@@ -12,6 +12,8 @@ export const renderListItem = (activity) => {
 };
 
 export const deleteListItem = id => {
+  if (id) {
     const el = document.querySelector(`a[href*="${id}"]`).parentElement;
     if (el) el.parentElement.removeChild(el);
+  }
 }

@@ -37,13 +37,13 @@ export const renderActivity = (activity, isLiked) => {
                       <img src="${priceImg}" heigh="48" width="48">
                   </div>
       `;
-  } else if (activity == undefined && isLiked == false){
-    markup = `<div class="bg-red-700 h-full w-full text-center">
-    <h1 class="text-white font-extrabold p-6">Error: puede deberse a permisos, conexion o falta de data. Intente de vuelta</h1>
-  </div>`
-  } else if(activity == undefined && isLiked == true) {
+  }  else if(activity == undefined && isLiked == true) {
     markup = `<div class="bg-gray-400 h-full w-full text-center">
     <h1 class="text-gray-800 font-extrabold p-6">Para activar la funcionalidad de me gustas, debe registrarse</h1>
+  </div>`
+  } else {
+    markup = `<div class="bg-red-700 h-full w-full text-center">
+    <h1 class="text-white font-extrabold p-6">Error: puede deberse a permisos, conexion o falta de data. Intente de vuelta</h1>
   </div>`
   }
 	elements.activitySection.insertAdjacentHTML('afterbegin', markup);
