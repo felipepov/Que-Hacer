@@ -11,8 +11,6 @@ import * as activityView from './views/activityView.js';
 import * as likesView from './views/likesView.js';
 import './styles.css';
 // Todo:
-// - Compress images correctly
-// - Translate everything
 // - Filter actvities implmentations
 
 const state = {};
@@ -58,6 +56,7 @@ const controlActivity = async (id, contribution = undefined) => {
 		}
 		clearLoader(elements.main);
 		activityView.renderActivity(state.act, liked);
+
 	} else {
 		activityView.clearActivity();
 		clearLoader(elements.main);
@@ -346,6 +345,7 @@ window.addEventListener('hashchange', async function () {
 
 // Restore liked recipes on page load
 window.addEventListener('load', () => {
+	changeLanguageByButtonClick()
 	state.like = new Like();
 	window.location.hash = '';
 	// Restore likes

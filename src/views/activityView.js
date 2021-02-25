@@ -46,7 +46,7 @@ export const renderActivity = (activity, isLiked) => {
     <h1 class="text-white font-extrabold p-6">Error: puede deberse a permisos, conexion o falta de data. Intente de vuelta</h1>
   </div>`
   }
-	elements.activitySection.insertAdjacentHTML('afterbegin', markup);
+  elements.activitySection.insertAdjacentHTML('afterbegin', markup);
 };
 
 export const clearActivity = () => {

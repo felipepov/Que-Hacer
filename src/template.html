@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Que Hacer?</title>
 	</head>
 	
@@ -154,6 +155,7 @@ class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-cente
 </div>
 <footer class="bg-primary-300 text-sm text-center font-Lato font-light text-secondary-light w-full p-4">
 	<h5>Creado por Pip-po</h5>
+	<div id="google_translate_element" style="display:none"></div>
 </footer>
 
 
@@ -179,5 +181,27 @@ class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-cente
 		<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-auth.js"></script>
 		<!-- <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-performance.js"></script> -->
 		<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
+		<script type="text/javascript">
+
+			function googleTranslateElementInit() {
+			  new google.translate.TranslateElement({pageLanguage: "en"}, 'google_translate_element');
+			}
+			
+			function changeLanguageByButtonClick() {
+			  var language = 'es';
+			  var selectField = document.querySelector("#google_translate_element select");
+			  for(var i=0; i < selectField.children.length; i++){
+				var option = selectField.children[i];
+				// find desired langauge and change the former language of the hidden selection-field 
+				if(option.value==language){
+				   selectField.selectedIndex = i;
+				   // trigger change event afterwards to make google-lib translate this side
+				   selectField.dispatchEvent(new Event('change'));
+				   break;
+				}
+			  }
+			}
+			</script>
+		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
