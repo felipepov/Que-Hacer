@@ -6,7 +6,7 @@
 	<title>Que Hacer?</title>
 	</head>
 	
-	<body id="body" class="flex flex-col justify-between min-h-screen bg-secondary-light">
+	<body id="body" class="flex flex-col justify-between min-h-screen bg-white">
 		<header class="flex w-full b-primary-200">
 			<div
 			class="flex flex-row bg-secondary-acc w-3/4 md:w-2/4 justify-center text-center"
@@ -65,7 +65,7 @@ class="flex flex-col w-full absolute top-0 right-0 mt-20 p-0 bg-primary-100 just
 </div>
 </nav>
 </header>
-<main class="grid grid-cols-8" id="main">
+<main class="grid grid-cols-8 flex-1" id="main">
 	<!-- Main title and subheading with call to action to generate activity -->
 	<div
 	class="flex flex-col col-span-6 col-start-2 text-center justify-evenly items-center"
@@ -101,9 +101,9 @@ class="font-Monstserrat m-8 text-black bg-white col-span-6 col-start-2 border-pr
 <!-- Loader -->
 </main>
 <div id="contribuir"
-class="bg-primary-200 text-white grid grid-cols-8">
+class="bg-primary-200 text-white grid grid-cols-8 flex-1 item-center">
 <div
-class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-center"
+class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-center "
 >
 <h1 class="p-4 text-3xl font-extrabold uppercase tracking-wider">
 	Contribuye al proyecto:
@@ -116,10 +116,9 @@ class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-cente
 
 <!-- Activation to create buttons to filter out content -->
 </div>
-<div class="col-span-6 col-start-2">
-	<section id="whenSignedIn" hidden="true">
-		<div class="flex flex-col justify-evenly p-4 m-8 mt-2 bg-primary-100 border-secondary-light border-2 rounded-md">
-		<div id="userDetails" class="w-1/4 font-Monstserrat text-lg m-2"></div>
+<div class="col-span-6 col-start-2" id="whenSignedIn" hidden="true">
+		<div class="flex flex-col justify-evenly p-4 my-2 bg-primary-100 border-secondary-light border-1 rounded-md">
+		<div id="userDetails" class="w-100 font-Monstserrat text-lg m-2 text-primary-300"></div>
 		<button id="signOutBtn" class="w-10/12 mx-auto button hover:scale-95 bg-white text-black cursor-pointer p-4 my-4 rounded-md">Desconectar</button>
 		<h3 class="contributeTitles">Actividades contribuidas</h3>
 		<ul id="actsList">
@@ -148,13 +147,12 @@ class="flex flex-row col-span-6 col-start-2 text-left justify-evenly items-cente
 			<label for="accesibility">Facilidad (0 a 10):</label>
 			<input type="number" name="accesibility"  min="0" max="10" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 && this.value <= 10 ? Math.abs(this.value) : null" class="formElement">
 		  </form>
-		<button id="createAct" class="p-4 mx-2 my-4 bg-secondary-acc font-bold rounded-lg button hover:scale-100">Crear Actividad</button>
+		<button id="createAct" class="p-4 mx-2 my-4 bg-secondary-acc font-bold rounded-lg button hover:scale-95">Crear Actividad</button>
 	</div>
-	  </section>
 </div>
 </div>
 <footer class="bg-primary-300 text-sm text-center font-Lato font-light text-secondary-light w-full p-4">
-	<h5>Creado por Pip-po</h5>
+	<h5>Creado por Felipe Poviña</h5>
 	<div id="google_translate_element" style="display:none"></div>
 </footer>
 

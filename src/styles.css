@@ -6,11 +6,11 @@
 
 
 .formElement{
-    @apply w-1/4 m-2 rounded-sm text-black;
+    @apply m-2 rounded-sm text-black;
 }
 
 .contributeTitles {
-    @apply font-Monstserrat text-2xl font-bold mx-2 mb-2 mt-4 text-black;
+    @apply font-Monstserrat text-2xl font-bold mx-2 mb-2 mt-4 text-primary-300;
 }
 
 .wrapper{

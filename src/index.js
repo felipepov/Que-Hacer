@@ -176,7 +176,7 @@ auth.onAuthStateChanged((user) => {
 		// signed in
 		elements.whenSignedIn.hidden = false;
 		elements.whenSignedOut.hidden = true;
-		elements.userDetails.innerHTML = `<h3>Hola <span class=" font-bold"> ${user.displayName}</span>!</h3> <p>ID de Usuario: <span class=" font-bold">${user.uid}</span><br><span>Para hacer <b>sync </b>de tus me gustas ponle me gusta a cualquier actividad!</p>`;
+		elements.userDetails.innerHTML = `<h2 id="${user.uid}">Hola <span class=" font-bold"> ${user.displayName}</span>!</h2><span>Para hacer <b>sync </b>de tus me gustas ponle me gusta a cualquier actividad!</p>`;
 	} else {
 		// not signed in
 		elements.whenSignedIn.hidden = true;
@@ -248,16 +248,16 @@ auth.onAuthStateChanged((user) => {
 						doc.data().key
 					}"class="list-decimal list-inside flex flex-row items-center m-4 border-primary-200 p-4 border-4 rounded-lg bg-primary-300 text-white"><h4 class="mx-2 text-base"><a href="#${
 						doc.data().key
-					}" class="font-bold cursor-pointer">${
+					}" class="font-bold cursor-pointer hover:scale-95">${
 						doc.data().title
-					}</a> - agregada por <span class="italic">${
+					}- agregada por <span class="italic">${
 						doc.data().uname
 					}</span></h4><div class="flex flex-col md:flex-row border-primary-200 border-2 rounded-md p-2 bg-primary-300 mx-3 my-0 cursor-pointer ml-auto" >
 					<h4 class="text-3xl mx-2">${doc.data().liked}</h4>
 					<img class="button hover:scale-110 mx-2" src="${getLikeImage(
 						true
 					)}" alt="" srcset=""></img>
-				</div></li>`;
+				</div></a> </li>`;
 				});
 				elements.actsList.innerHTML = items.join('');
 			});
