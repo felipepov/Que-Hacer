@@ -7,7 +7,7 @@ export default class Activy {
 		if (this.data == undefined){
 			try {
 				const res = await fetch(
-					`http://www.boredapi.com/api/activity?key=${this.key}`
+					`https://bored-api.appbrewery.com/activity/${this.key}`
 				).then((response) => response.json());
 				this.title = res.activity;
 				this.type = res.type;
