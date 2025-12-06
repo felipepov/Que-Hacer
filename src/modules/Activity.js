@@ -7,16 +7,23 @@ export default class Activy {
 		if (this.data == undefined){
 			try {
 				// If key is empty or invalid, fetch random activity. Otherwise fetch specific activity by key
-				// Bored API format: /activity for random, /activity?key={key} for specific
-				const url = this.key && this.key !== '' ? 
-					`https://bored-api.appbrewery.com/activity?key=${this.key}` :
+				// Bored API format: /activity for random, /activity/{key} for specific activity
+				const url = this.key && this.key !== '' && !isNaN(this.key) ? 
+					`https://bored-api.appbrewery.com/activity/${this.key}` :
 					`https://bored-api.appbrewery.com/activity`;
-				const res = await fetch(url).then((response) => {
-					if (!response.ok) {
-						throw new Error(`HTTP error! status: ${response.status}`);
+				const response = await fetch(url);
+				
+				if (!response.ok) {
+					// Handle rate limiting or other HTTP errors
+					if (response.status === 429) {
+						console.error('API rate limit exceeded. Please try again later.');
+					} else {
+						console.error(`HTTP error! status: ${response.status}`);
 					}
-					return response.json();
-				});
+					return;
+				}
+				
+				const res = await response.json();
 				
 				// Check if response has error property (Bored API returns {error: "..."} on failure)
 				if (res.error) {
@@ -24,17 +31,25 @@ export default class Activy {
 					return;
 				}
 				
+				// Validate response has required fields
+				if (!res.activity || res.activity === '') {
+					console.error('Invalid API response: missing activity field');
+					return;
+				}
+				
 				this.title = res.activity;
 				this.type = res.type;
 				this.people = res.participants;
 				this.price = res.price;
-				this.link = res.link;
+				this.link = res.link || '';
 				this.access = res.accessibility;
 				this.liked = false;
 				this.key = res.key;
 				return res;
 			} catch (err) {
 				console.error('Error fetching activity:', err);
+				// Don't throw - let the calling code handle undefined title
+				return;
 			}
 		} else {
 			this.title = this.data.title;

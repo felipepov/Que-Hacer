@@ -62,15 +62,23 @@ const controlActivity = async (id, contribution = undefined) => {
 		activityView.renderActivity(state.act, liked);
 
 	} else {
+		// API call failed or returned no data
 		activityView.clearActivity();
 		clearLoader(elements.main);
-		activityView.renderActivity(undefined, false);
-		console.error('ERROR: Activiy not found, try again');
-		// Remove like from the state only if we have a valid key
+		// Always hide section on failure - don't show error messages
+		// This prevents errors from showing on page load or rate limits
+		if (!elements.activitySection.classList.contains('hidden')) {
+			elements.activitySection.classList.add('hidden');
+		}
+		
 		if (key) {
+			console.error('ERROR: Activity not found, try again');
+			// Remove like from the state
 			state.act.liked = state.like.deleteLike(key);
 			// Remove like from UI list
 			likesView.deleteListItem(key);
+		} else {
+			console.error('ERROR: Could not fetch activity. The API may be rate-limited. Please try again in a moment.');
 		}
 	}
 };
@@ -322,10 +330,10 @@ elements.body.addEventListener('click', (e) => {
 
 // Check for inputted activity
 window.addEventListener('hashchange', async function () {
-	const id = window.location.hash.replace('#', '');
+	const id = window.location.hash.replace('#', '').trim();
 	
 	// If hash is empty, hide activity section and clear loader
-	if (!id || id.trim() === '') {
+	if (!id || id === '') {
 		activityView.clearActivity();
 		clearLoader(elements.main);
 		if (!elements.activitySection.classList.contains('hidden')) {
@@ -334,6 +342,19 @@ window.addEventListener('hashchange', async function () {
 		return;
 	}
 	
+	// Only process if it's a valid activity ID (7 digits between 1000000-9999999)
+	const numericId = parseInt(id, 10);
+	if (isNaN(numericId) || numericId < 1000000 || numericId > 9999999) {
+		// Invalid ID format, clear and hide section
+		activityView.clearActivity();
+		clearLoader(elements.main);
+		if (!elements.activitySection.classList.contains('hidden')) {
+			elements.activitySection.classList.add('hidden');
+		}
+		return;
+	}
+	
+	// Valid ID, show section and fetch activity
 	activityView.clearActivity();
 	clearLoader(elements.main);
 	renderLoader(elements.main);
@@ -341,31 +362,32 @@ window.addEventListener('hashchange', async function () {
 		elements.activitySection.classList.remove('hidden');
 	}
 	
-	state.app = new AppActivity(parseInt(id));
-	if (id >= 1000000 && id <= 9999999) {
-		try {
-			const call = await state.app.getData();
-			clearLoader(elements.main)
-			if (call) {
-				controlActivity(id, state.app.data);
-			} else {
-				controlActivity(id);
-			}
-		} catch (err) {
-			console.error('Something went wrong');
-			console.error(err);
-			clearLoader(elements.main);
-		}
-		if (elements.activitySection.classList.contains('hidden')) {
-			elements.activitySection.classList.remove('hidden');
-		}
-	} else {
-		// Invalid ID format, clear loader and hide section
+	state.app = new AppActivity(numericId);
+	try {
+		const call = await state.app.getData();
 		clearLoader(elements.main);
+		if (call) {
+			controlActivity(numericId, state.app.data);
+		} else {
+			controlActivity(numericId);
+		}
+	} catch (err) {
+		console.error('Something went wrong');
+		console.error(err);
+		clearLoader(elements.main);
+		// Hide section on error
 		if (!elements.activitySection.classList.contains('hidden')) {
 			elements.activitySection.classList.add('hidden');
 		}
 	}
+});
+
+// Ensure activity section is hidden on DOMContentLoaded (before any other scripts run)
+document.addEventListener('DOMContentLoaded', () => {
+	if (elements.activitySection && !elements.activitySection.classList.contains('hidden')) {
+		elements.activitySection.classList.add('hidden');
+	}
+	activityView.clearActivity();
 });
 
 // Restore liked recipes on page load
@@ -376,11 +398,22 @@ window.addEventListener('load', () => {
 	// Ensure activity section is hidden on initial load
 	activityView.clearActivity();
 	clearLoader(elements.main);
-	if (!elements.activitySection.classList.contains('hidden')) {
+	if (elements.activitySection && !elements.activitySection.classList.contains('hidden')) {
 		elements.activitySection.classList.add('hidden');
 	}
 	
-	window.location.hash = '';
+	// Clear hash on initial load if it's empty or invalid
+	const currentHash = window.location.hash.replace('#', '').trim();
+	if (!currentHash || currentHash === '') {
+		window.location.hash = '';
+	} else {
+		const numericId = parseInt(currentHash, 10);
+		// If hash exists but is invalid, clear it
+		if (isNaN(numericId) || numericId < 1000000 || numericId > 9999999) {
+			window.location.hash = '';
+		}
+	}
+	
 	// Restore likes
 	state.like.readStorage();
 

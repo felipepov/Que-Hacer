@@ -5,13 +5,18 @@ import priceImg from '../assets/price.svg';
 import partImg from '../assets/participants.svg';
 
 export const renderActivity = (activity, isLiked) => {
+  // Don't render anything if activity section should be hidden
+  if (elements.activitySection.classList.contains('hidden')) {
+    return;
+  }
+  
   let markup;
-  if (activity != undefined){
+  if (activity != undefined && activity.title != undefined){
 
     markup = `     
                   <div class="flex justify-between items-center ">
               <h3 class="text-xl font-bold pl-6 capitalize"><a href="#${
-                activity.link
+                activity.link || ''
               }">${activity.title}</a></h3>
                   <div class="bg-primary-200 px-6 py-2 cursor-pointer" id="like">
                       <img class="button hover:scale-110 " src="${getLikeImage(isLiked)}" alt="" srcset="">
@@ -42,6 +47,7 @@ export const renderActivity = (activity, isLiked) => {
     <h1 class="text-gray-800 font-extrabold p-6">Para activar la funcionalidad de me gustas, debe registrarse</h1>
   </div>`
   } else {
+    // Only show error if section is visible (not hidden)
     markup = `<div class="bg-red-700 h-full w-full text-center">
     <h1 class="text-white font-extrabold p-6">Error: puede deberse a permisos, conexion o falta de data. Intente de vuelta</h1>
   </div>`
