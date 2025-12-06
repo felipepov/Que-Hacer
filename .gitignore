@@ -2,8 +2,8 @@ node_modules
 tailwindDefault.config.js
 .firebaserc
 database.rules.json
-firebase.json
-storage.rules
+# firebase.json - keep this in git for deployment config
+# storage.rules - keep this in git if you use storage
 .firebase
 firebase-debug.log
 ui-debug.log
@@ -12,3 +12,5 @@ webpack.prod.js
 webpack.dev.js
 webpack.common.js
 postcss.config.js
+.env
+.env.local

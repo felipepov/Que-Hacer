@@ -27,7 +27,11 @@ let counter;
 const controlActivity = async (id, contribution = undefined) => {
 	// 1) Get existing id or generate random one
 	const key = parseInt(id, 10);
-	if (key) {
+	
+	// If no valid key and no contribution data, fetch random activity
+	if (!key && !contribution) {
+		state.act = new Activity('', contribution);
+	} else if (key) {
 		state.act = new Activity(key, contribution);
 	} else {
 		state.act = new Activity('', contribution);
@@ -62,10 +66,12 @@ const controlActivity = async (id, contribution = undefined) => {
 		clearLoader(elements.main);
 		activityView.renderActivity(undefined, false);
 		console.error('ERROR: Activiy not found, try again');
-		// Remove like from the state
-		state.act.liked = state.like.deleteLike(key);
-		// Remove like from UI list
-		likesView.deleteListItem(key);
+		// Remove like from the state only if we have a valid key
+		if (key) {
+			state.act.liked = state.like.deleteLike(key);
+			// Remove like from UI list
+			likesView.deleteListItem(key);
+		}
 	}
 };
 // *** APP CONTROLLER ***
@@ -316,13 +322,25 @@ elements.body.addEventListener('click', (e) => {
 
 // Check for inputted activity
 window.addEventListener('hashchange', async function () {
+	const id = window.location.hash.replace('#', '');
+	
+	// If hash is empty, hide activity section and clear loader
+	if (!id || id.trim() === '') {
+		activityView.clearActivity();
+		clearLoader(elements.main);
+		if (!elements.activitySection.classList.contains('hidden')) {
+			elements.activitySection.classList.add('hidden');
+		}
+		return;
+	}
+	
 	activityView.clearActivity();
 	clearLoader(elements.main);
 	renderLoader(elements.main);
 	if (elements.activitySection.classList.contains('hidden')) {
 		elements.activitySection.classList.remove('hidden');
 	}
-	const id = window.location.hash.replace('#', '');
+	
 	state.app = new AppActivity(parseInt(id));
 	if (id >= 1000000 && id <= 9999999) {
 		try {
@@ -336,9 +354,16 @@ window.addEventListener('hashchange', async function () {
 		} catch (err) {
 			console.error('Something went wrong');
 			console.error(err);
+			clearLoader(elements.main);
 		}
 		if (elements.activitySection.classList.contains('hidden')) {
 			elements.activitySection.classList.remove('hidden');
+		}
+	} else {
+		// Invalid ID format, clear loader and hide section
+		clearLoader(elements.main);
+		if (!elements.activitySection.classList.contains('hidden')) {
+			elements.activitySection.classList.add('hidden');
 		}
 	}
 });
@@ -347,6 +372,14 @@ window.addEventListener('hashchange', async function () {
 window.addEventListener('load', () => {
 	changeLanguageByButtonClick()
 	state.like = new Like();
+	
+	// Ensure activity section is hidden on initial load
+	activityView.clearActivity();
+	clearLoader(elements.main);
+	if (!elements.activitySection.classList.contains('hidden')) {
+		elements.activitySection.classList.add('hidden');
+	}
+	
 	window.location.hash = '';
 	// Restore likes
 	state.like.readStorage();

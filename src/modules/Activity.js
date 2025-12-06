@@ -6,9 +6,24 @@ export default class Activy {
 	async getResults() {
 		if (this.data == undefined){
 			try {
-				const res = await fetch(
-					`https://bored-api.appbrewery.com/activity/${this.key}`
-				).then((response) => response.json());
+				// If key is empty or invalid, fetch random activity. Otherwise fetch specific activity by key
+				// Bored API format: /activity for random, /activity?key={key} for specific
+				const url = this.key && this.key !== '' ? 
+					`https://bored-api.appbrewery.com/activity?key=${this.key}` :
+					`https://bored-api.appbrewery.com/activity`;
+				const res = await fetch(url).then((response) => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.json();
+				});
+				
+				// Check if response has error property (Bored API returns {error: "..."} on failure)
+				if (res.error) {
+					console.error('API Error:', res.error);
+					return;
+				}
+				
 				this.title = res.activity;
 				this.type = res.type;
 				this.people = res.participants;
@@ -19,7 +34,7 @@ export default class Activy {
 				this.key = res.key;
 				return res;
 			} catch (err) {
-				console.error(err);
+				console.error('Error fetching activity:', err);
 			}
 		} else {
 			this.title = this.data.title;

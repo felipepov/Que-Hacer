@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can only read/write their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Activities collection - anyone can read, only authenticated users can create
+    match /activities/{activityId} {
+      allow read: if true; // Public read access
+      allow create: if request.auth != null; // Only authenticated users can create
+      allow update: if request.auth != null && 
+                       request.resource.data.diff(resource.data).affectedKeys()
+                       .hasOnly(['liked']); // Only allow updating the 'liked' field
+      allow delete: if false; // No one can delete (or restrict to admins)
+    }
+  }
+}
+
