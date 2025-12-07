@@ -1,0 +1,23 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Que Hacer",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "12"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-functions": "^3.24.1"
+  },
+  "devDependencies": {
+    "firebase-tools": "^8.11.0"
+  },
+  "private": true
+}
+

@@ -6,12 +6,17 @@ export default class Activy {
 	async getResults() {
 		if (this.data == undefined){
 			try {
-				// If key is empty or invalid, fetch random activity. Otherwise fetch specific activity by key
-				// Bored API format: /activity for random, /activity/{key} for specific activity
-				const url = this.key && this.key !== '' && !isNaN(this.key) ? 
-					`https://bored-api.appbrewery.com/activity/${this.key}` :
-					`https://bored-api.appbrewery.com/activity`;
-				const response = await fetch(url);
+				// Use allorigins.win to bypass CORS restrictions
+				const key = this.key && this.key !== '' && !isNaN(this.key) ? this.key : '';
+				
+				// Bored API endpoint
+				const apiUrl = key ? 
+					`https://bored-api.appbrewery.com/activity/${key}` :
+					`https://bored-api.appbrewery.com/random`;
+				
+				// Use allorigins.win CORS proxy
+				const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
+				const response = await fetch(proxyUrl);
 				
 				if (!response.ok) {
 					// Handle rate limiting or other HTTP errors
@@ -23,7 +28,31 @@ export default class Activy {
 					return;
 				}
 				
-				const res = await response.json();
+				// Parse response - handle both JSON and text responses
+				const text = await response.text();
+				
+				// Check if response is a rate limit or error message
+				if (text.includes('Too many requests') || text.includes('rate limit') || text.includes('Rate limit')) {
+					console.error('API rate limit exceeded. Please try again later.');
+					return;
+				}
+				
+				// Check if response looks like HTML (error page)
+				if (text.trim().startsWith('<')) {
+					console.error('Received HTML response instead of JSON. The API may be down.');
+					return;
+				}
+				
+				let res;
+				try {
+					// Try to parse as JSON
+					res = JSON.parse(text);
+				} catch (parseError) {
+					// If parsing fails, log the actual response for debugging
+					console.error('Failed to parse JSON response. Response:', text.substring(0, 200));
+					console.error('Parse error:', parseError);
+					return;
+				}
 				
 				// Check if response has error property (Bored API returns {error: "..."} on failure)
 				if (res.error) {
